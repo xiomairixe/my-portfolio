@@ -1,42 +1,45 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import emailjs from "@emailjs/browser";
 
 // ============================================================
 // DATA
 // ============================================================
 const YOUR_NAME     = "Glen Honrado";
 const YOUR_FIRST    = "Glen";
-const YOUR_TAGLINE  = "I build clean, performant web applications — focused on great user experiences and maintainable code.";
+const YOUR_TAGLINE  = "I build end-to-end web applications and aspire to secure them — focused on real-world impact, clean code, and growing into cybersecurity.";
 const YOUR_EMAIL    = "glenhonrado282004@gmail.com";
+const YOUR_PHONE    = "09167060932";
+const YOUR_WEBSITE  = "glen.vercel.app";
 const YOUR_GITHUB   = "github.com/xiomairixe";
-const YOUR_LINKEDIN = "linkedin.com/in/glenhonrado";
-const TYPING_ROLES  = ["Full-Stack", "Frontend", "Backend", "UI/UX"];
+const YOUR_LINKEDIN = "linkedin.com/in/glen-honrado-8694b4322";
+const TYPING_ROLES  = ["Full-Stack", "Frontend", "Backend", "PenTester"];
 
 const SKILL_CATEGORIES = [
-  { title: "Frontend",       skills: ["React", "TypeScript", "Next.js", "Vite", "TailwindCSS", "Bootstrap", "Vue", "Quasar"] },
-  { title: "Backend",        skills: ["Python", "REST APIs", "PHP", "Laravel"] },
-  { title: "Database",       skills: ["MongoDB", "SQLite", "MySQL"] },
-  { title: "Infrastructure", skills: ["CI/CD", "Linux", "Kali Linux", "WSL"] },
-  { title: "Tooling",        skills: ["Git", "GitHub Actions", "GitLab", "Figma", "VS Code", "Postman"] },
-  { title: "Deployment",     skills: ["Vercel", "Render", "MongoDB Atlas", "Cloudinary"] },
+  { title: "Frontend",       skills: ["React", "Next.js", "Vue.js", "Quasar", "TypeScript", "TailwindCSS", "Bootstrap"] },
+  { title: "Backend",        skills: ["PHP", "Laravel", "Python", "Node.js", "Express.js", "REST APIs"] },
+  { title: "Database",       skills: ["MySQL", "MongoDB", "SQLite"] },
+  { title: "Infrastructure", skills: ["Docker", "Linux", "WSL", "Raspberry Pi", "Kali Linux"] },
+  { title: "Tooling",        skills: ["Git", "GitLab", "Postman", "Figma", "VS Code", "GitHub Actions"] },
+  { title: "Deployment",     skills: ["Vercel", "Render", "MongoDB Atlas", "Cloudflare", "Indevfinite"] },
 ];
 
 const PROJECTS = [
   {
     id: 1,
-    title: "Facilities Reservation System",
-    description: "Allows users to book and manage shared facilities — rooms, equipment, and event spaces. Provides real-time availability and prevents scheduling conflicts.",
+    title: "Administrative System",
+    description: "Comprehensive system covering Facilities Reservation, Visitor Management, and Document Management — with real-time availability, conflict prevention, and a responsive UI.",
     tags: ["PHP", "Bootstrap", "MySQL"],
-    images: ["/FacilitiesReservation.png", "/FacilitiesReservation2.png", "/FacilitiesReservation3.png"],
+    images: ["/FacilitiesReservation.png", "/Facilities.png", "/Reservation.png"],
     github: "https://github.com/xiomairixe",
     accent: "#f59e0b",
   },
   {
     id: 2,
-    title: "Sari-Sari Store Management",
-    description: "Full-stack system for managing inventory, sales, and customer data in small retail stores. Built with a REST API backend and a reactive frontend.",
-    tags: ["React", "Express.js", "MongoDB", "Tailwind"],
+    title: "My Store Management System",
+    description: "Full-stack system for inventory tracking, sales monitoring, and reporting for small retail stores. Built with a REST API backend and a reactive frontend.",
+    tags: ["React", "Express.js", "MongoDB", "Tailwind CSS"],
     images: ["/StoreManagement.png", "/StoreManagement2.png"],
     github: "https://github.com/xiomairixe",
     accent: "#34d399",
@@ -44,11 +47,20 @@ const PROJECTS = [
   {
     id: 3,
     title: "RFID DTR Attendance System",
-    description: "Digital time-tracking solution using RFID technology to automatically record employee and student attendance. Users tap their card to log time in/out.",
+    description: "Automated digital time-tracking solution using RFID technology to record employee and student attendance. Tap a card to log time in/out with zero manual input.",
     tags: ["Laravel", "Vue.js", "Quasar", "MySQL"],
     images: [],
     github: "https://github.com/xiomairixe",
     accent: "#60a5fa",
+  },
+  {
+    id: 4,
+    title: "FinTrack — Personal Finance Tracker",
+    description: "Personal finance application to track income, expenses, and savings goals — giving users a clear picture of where their money goes.",
+    tags: ["React", "Node.js", "MongoDB"],
+    images: [],
+    github: "https://github.com/xiomairixe",
+    accent: "#a78bfa",
   },
 ];
 
@@ -62,7 +74,6 @@ function ParticleBg({ dark }: { dark: boolean }) {
   const darkRef   = useRef(dark);
   const COUNT = 78, LINK = 148, SPEED = 0.28;
 
-  // keep a live ref so the draw loop sees updates without restart
   useEffect(() => { darkRef.current = dark; }, [dark]);
 
   const init = useCallback((w: number, h: number) => {
@@ -87,7 +98,7 @@ function ParticleBg({ dark }: { dark: boolean }) {
     const draw = () => {
       ctx.clearRect(0, 0, W, H);
       const p   = pts.current;
-      const col = darkRef.current ? "245,158,11" : "99,102,241";  // amber : indigo
+      const col = darkRef.current ? "245,158,11" : "99,102,241";
 
       for (const pt of p) {
         pt.x += pt.vx; pt.y += pt.vy; pt.pulse += pt.ps;
@@ -240,14 +251,12 @@ export default function Portfolio() {
   const [formData,  setFormData]  = useState({ name:"", email:"", message:"" });
   const [submitted, setSubmitted] = useState(false);
 
-  // Persist theme in localStorage
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     if (saved) setDark(saved === "dark");
   }, []);
   const toggleTheme = () => setDark(d => { localStorage.setItem("theme", !d ? "dark" : "light"); return !d; });
 
-  // Typing animation
   useEffect(() => {
     const current = TYPING_ROLES[roleIndex];
     let timer: ReturnType<typeof setTimeout>;
@@ -261,19 +270,39 @@ export default function Portfolio() {
     return () => clearTimeout(timer);
   }, [displayed, deleting, roleIndex]);
 
-  const handleSubmit = () => {
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState("");
+
+  const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.message) return;
-    setSubmitted(true);
-    setTimeout(() => { setSubmitted(false); setFormData({ name:"", email:"", message:"" }); }, 4000);
+    setSending(true);
+    setSendError("");
+    try {
+      await emailjs.send(
+        "service_09z44wz",
+        "template_e7dqknm",
+        {
+          from_name:  formData.name,
+          from_email: formData.email,
+          message:    formData.message,
+        },
+        "wkqj8O7W2q3M8h37j"
+      );
+      setSubmitted(true);
+      setFormData({ name: "", email: "", message: "" });
+      setTimeout(() => setSubmitted(false), 4000);
+    } catch (err) {
+      setSendError("Something went wrong. Please try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
     <div className={`root${dark ? " dark" : " light"}`}>
       <ParticleBg dark={dark} />
 
-      {/* grain overlay */}
       <div style={{ position:"fixed", inset:0, pointerEvents:"none", zIndex:1, opacity:0.022, backgroundImage:`url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
-      {/* vignette */}
       <div style={{ position:"fixed", inset:0, pointerEvents:"none", zIndex:1, background:`radial-gradient(ellipse at 50% 40%, transparent 35%, ${dark?"rgba(8,12,20,0.65)":"rgba(248,250,252,0.6)"} 100%)`, transition:"background 0.35s" }} />
 
       <style>{`
@@ -282,7 +311,6 @@ export default function Portfolio() {
         html { scroll-behavior: smooth; }
         a { text-decoration: none; color: inherit; }
 
-        /* ── DARK TOKENS ── */
         .dark {
           --bg:          #080c14;
           --bg2:         #0d1220;
@@ -303,7 +331,6 @@ export default function Portfolio() {
           --toggleColor: #94a3b8;
         }
 
-        /* ── LIGHT TOKENS ── */
         .light {
           --bg:          #f8fafc;
           --bg2:         #ffffff;
@@ -331,7 +358,6 @@ export default function Portfolio() {
           transition: background 0.35s, color 0.35s;
         }
 
-        /* ── NAV ── */
         nav {
           position: fixed; top: 0; left: 0; right: 0; z-index: 50;
           background: var(--navBg);
@@ -349,7 +375,6 @@ export default function Portfolio() {
         .light .nav-cta { color:#fff; }
         .nav-cta:hover { background:var(--amber2); transform:translateY(-1px); }
 
-        /* ── THEME TOGGLE ── */
         .theme-toggle {
           display:flex; align-items:center; justify-content:center;
           width:36px; height:36px; border-radius:9px; flex-shrink:0;
@@ -361,7 +386,6 @@ export default function Portfolio() {
 
         @media (max-width:640px) { .nav-links .nav-link { display:none; } .nav-inner { padding:0 20px; } }
 
-        /* ── HERO ── */
         .hero { position:relative; z-index:2; min-height:100vh; padding-top:60px; display:flex; align-items:center; max-width:1100px; margin:0 auto; padding-left:36px; padding-right:36px; gap:60px; }
         @media (max-width:860px) { .hero { flex-direction:column; align-items:flex-start; padding-top:120px; padding-bottom:60px; gap:48px; } .hero-photo-col { display:none; } }
         @media (max-width:480px) { .hero { padding-left:20px; padding-right:20px; } }
@@ -389,7 +413,6 @@ export default function Portfolio() {
         .s-link { display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:8px; border:1px solid var(--border); color:var(--muted); transition:border-color 0.18s, color 0.18s, transform 0.18s; }
         .s-link:hover { border-color:var(--amber); color:var(--amber); transform:translateY(-2px); }
 
-        /* ── PHOTO ── */
         .hero-photo-col { flex-shrink:0; width:320px; position:relative; }
         .hero-photo-frame { width:100%; aspect-ratio:3/4; border-radius:20px; overflow:hidden; background:var(--bg3); border:1px solid var(--border); position:relative; transition:background 0.35s, border-color 0.35s; }
         .hero-photo-frame::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--amber),transparent); z-index:2; transition:background 0.35s; }
@@ -400,7 +423,6 @@ export default function Portfolio() {
         .hero-photo-year { position:absolute; top:-14px; left:-14px; background:var(--bg3); border:1px solid var(--border); color:var(--muted); font-size:12px; font-weight:500; padding:8px 14px; border-radius:8px; transition:background 0.35s, border-color 0.35s, color 0.35s; }
         .hero-photo-year span { color:var(--text); font-weight:600; transition:color 0.35s; }
 
-        /* ── SECTIONS ── */
         .page-wrap { position:relative; z-index:2; max-width:1100px; margin:0 auto; padding:0 36px; }
         @media (max-width:480px) { .page-wrap { padding:0 20px; } }
         .section { padding:80px 0; }
@@ -409,7 +431,6 @@ export default function Portfolio() {
         .s-sub { font-size:15px; color:var(--muted); margin-bottom:44px; font-weight:300; max-width:500px; line-height:1.75; transition:color 0.35s; }
         hr { position:relative; z-index:2; border:none; border-top:1px solid var(--border); max-width:1100px; margin:0 auto; transition:border-color 0.35s; }
 
-        /* ── ABOUT ── */
         .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; }
         @media (max-width:700px) { .about-grid { grid-template-columns:1fr; gap:32px; } }
         .about-text { font-size:15px; line-height:1.85; color:var(--muted); font-weight:300; transition:color 0.35s; }
@@ -421,7 +442,6 @@ export default function Portfolio() {
         .fact-label { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--amber); margin-bottom:3px; transition:color 0.35s; }
         .fact-value { font-size:14px; color:var(--text); font-weight:500; transition:color 0.35s; }
 
-        /* ── SKILLS ── */
         .skills-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
         @media (max-width:760px) { .skills-grid { grid-template-columns:1fr 1fr; } }
         @media (max-width:480px) { .skills-grid { grid-template-columns:1fr; } }
@@ -432,7 +452,6 @@ export default function Portfolio() {
         .skill-tag { font-size:12px; font-weight:500; padding:4px 10px; border-radius:5px; background:var(--bg3); border:1px solid var(--border); color:var(--muted); transition:color 0.18s, border-color 0.18s, background 0.35s; }
         .skill-tag:hover { color:var(--text); border-color:rgba(217,119,6,0.3); }
 
-        /* ── PROJECTS ── */
         .project-row { display:grid; grid-template-columns:1fr 420px; background:var(--bg2); border:1px solid var(--border); border-radius:16px; overflow:hidden; transition:border-color 0.22s, transform 0.22s, background 0.35s; margin-bottom:12px; }
         .project-row:hover { border-color:rgba(217,119,6,0.25); transform:translateY(-2px); }
         @media (max-width:860px) { .project-row { grid-template-columns:1fr; } }
@@ -448,7 +467,18 @@ export default function Portfolio() {
         .project-visual { aspect-ratio:16/11; overflow:hidden; background:var(--bg3); border-left:1px solid var(--border); position:relative; transition:background 0.35s, border-color 0.35s; }
         @media (max-width:860px) { .project-visual { border-left:none; border-top:1px solid var(--border); aspect-ratio:16/9; } }
 
-        /* ── CONTACT ── */
+        /* ── INTERNSHIP ── */
+        .internship-card { background:var(--bg2); border:1px solid var(--border); border-radius:16px; padding:32px 36px; transition:border-color 0.2s, background 0.35s; }
+        .internship-card:hover { border-color:rgba(217,119,6,0.25); }
+        .internship-header { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+        .internship-company { font-family:'DM Serif Display',serif; font-size:20px; color:var(--text); letter-spacing:-0.4px; transition:color 0.35s; }
+        .internship-role { font-size:13px; color:var(--amber); font-weight:600; margin-top:4px; transition:color 0.35s; }
+        .internship-year { font-size:12px; font-weight:600; color:var(--muted); background:var(--bg3); border:1px solid var(--border); padding:5px 12px; border-radius:99px; flex-shrink:0; transition:all 0.35s; }
+        .internship-bullets { list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+        .internship-bullets li { font-size:14px; line-height:1.75; color:var(--muted); font-weight:300; padding-left:16px; position:relative; transition:color 0.35s; }
+        .internship-bullets li::before { content:'→'; position:absolute; left:0; color:var(--amber); font-size:12px; top:2px; transition:color 0.35s; }
+        .internship-stack { display:flex; flex-wrap:wrap; gap:6px; }
+
         .contact-wrap { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
         @media (max-width:700px) { .contact-wrap { grid-template-columns:1fr; gap:40px; } }
         .contact-lede { font-size:15px; color:var(--muted); line-height:1.85; font-weight:300; margin-bottom:32px; transition:color 0.35s; }
@@ -468,7 +498,6 @@ export default function Portfolio() {
         .send-btn:hover:not(:disabled) { background:var(--amber2); }
         .send-btn:disabled { opacity:0.6; cursor:not-allowed; }
 
-        /* ── FOOTER ── */
         .footer-wrap { position:relative; z-index:2; border-top:1px solid var(--border); transition:border-color 0.35s; }
         footer { max-width:1100px; margin:0 auto; padding:28px 36px; display:flex; align-items:center; justify-content:space-between; }
         @media (max-width:480px) { footer { flex-direction:column; gap:12px; text-align:center; padding:24px 20px; } }
@@ -477,18 +506,16 @@ export default function Portfolio() {
         .footer-link { font-size:13px; color:var(--dim); transition:color 0.18s; }
         .footer-link:hover { color:var(--amber); }
 
-        /* ── LIGHT MODE CARD SHADOWS ── */
         .light .skill-card,
         .light .fact-row,
         .light .project-row,
+        .light .internship-card,
         .light .c-link { box-shadow:0 1px 3px var(--shadow); }
 
-        /* ── SCROLLBAR ── */
         ::-webkit-scrollbar { width:4px; }
         ::-webkit-scrollbar-track { background:var(--bg); }
         ::-webkit-scrollbar-thumb { background:var(--dim); border-radius:2px; }
 
-        /* ── HERO ENTRY ANIMATION ── */
         @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
         .hero-left > * { animation:fadeUp 0.65s ease both; }
         .hero-left > *:nth-child(1){animation-delay:0.05s}
@@ -504,10 +531,9 @@ export default function Portfolio() {
         <div className="nav-inner">
           <a href="#" className="nav-logo">Glen<span>.</span></a>
           <div className="nav-links">
-            {["About","Skills","Projects","Contact"].map(l => (
+            {["About","Skills","Experience","Projects","Contact"].map(l => (
               <a key={l} href={`#${l.toLowerCase()}`} className="nav-link">{l}</a>
             ))}
-            {/* Dark/Light toggle */}
             <button
               className="theme-toggle"
               onClick={toggleTheme}
@@ -542,6 +568,9 @@ export default function Portfolio() {
               <a href={`mailto:${YOUR_EMAIL}`} className="s-link" title="Email">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>
               </a>
+              <a href={`https://${YOUR_WEBSITE}`} target="_blank" rel="noopener noreferrer" className="s-link" title="Website">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </a>
             </div>
           </div>
           <div className="hero-photo-col">
@@ -565,16 +594,16 @@ export default function Portfolio() {
           <h2 className="s-title">A bit about me</h2>
           <div className="about-grid">
             <div className="about-text">
-              <p>I'm a <strong>graduating Information Technology student</strong> with a strong foundation in building full-stack web applications. My work spans from designing database schemas and REST APIs to crafting polished, responsive UIs.</p>
-              <p>I love taking projects <strong>from idea to deployment</strong> — I've built systems used by real people in my school and community.</p>
-              <p>I'm actively looking for my <strong>first full-time role or freelance projects</strong> where I can contribute, grow, and keep building things that matter.</p>
+              <p>I'm a <strong>BS Information Technology graduate</strong> with hands-on experience building end-to-end web applications — from database schemas and REST APIs to polished, responsive UIs.</p>
+              <p>I've delivered <strong>real-world systems</strong> used by actual people: attendance platforms, administrative tools, and financial trackers. I care about shipping things that work.</p>
+              <p>I'm actively pursuing a <strong>career in full-stack development and cybersecurity</strong> — with a growing focus on securing web applications, cloud infrastructure, and network systems.</p>
             </div>
             <div>
               {[
-                { icon:"🎓", label:"Education",          value:"BS Computer Science — Graduating 2025" },
-                { icon:"📍", label:"Location",           value:"Philippines · Remote-friendly" },
+                { icon:"🎓", label:"Education",          value:"BS Information Technology — Bestlink College of the Philippines (2022–2026)" },
+                { icon:"📍", label:"Location",           value:"San Jose del Monte, Bulacan · Remote-friendly" },
                 { icon:"💼", label:"Looking for",        value:"Full-time roles & freelance projects" },
-                { icon:"🛠",  label:"Currently learning", value:"Docker, TypeScript, System Design, Cybersecurity" },
+                { icon:"🔐", label:"Aspiring toward",    value:"Cybersecurity — web app security, cloud infra, network systems" },
               ].map(f => (
                 <div key={f.label} className="fact-row">
                   <span className="fact-icon">{f.icon}</span>
@@ -601,6 +630,37 @@ export default function Portfolio() {
                 <div className="skill-tags">{cat.skills.map(s => <span key={s} className="skill-tag">{s}</span>)}</div>
               </div>
             ))}
+          </div>
+        </section>
+      </div>
+
+      <hr/>
+
+      {/* ── EXPERIENCE (INTERNSHIP) ── */}
+      <div className="page-wrap">
+        <section id="experience" className="section">
+          <p className="s-label">Experience</p>
+          <h2 className="s-title">Where I've worked</h2>
+          <p className="s-sub">Real-world experience shipping production software in a professional team.</p>
+          <div className="internship-card">
+            <div className="internship-header">
+              <div>
+                <p className="internship-company">VRTSystems Technologies Corp.</p>
+                <p className="internship-role">Full-Stack Developer Intern</p>
+              </div>
+              <span className="internship-year">2026</span>
+            </div>
+            <ul className="internship-bullets">
+              <li>Developed a DTR Attendance Management System with RFID and fingerprint-based attendance recording.</li>
+              <li>Built a REST API backend with Laravel and a Quasar/Vue.js frontend connected to a MySQL database.</li>
+              <li>Integrated Raspberry Pi for RFID and fingerprint sensor interfacing; containerized the application with Docker.</li>
+              <li>Tested API endpoints via Postman and managed source control with Git in a WSL environment.</li>
+            </ul>
+            <div className="internship-stack">
+              {["Laravel", "Quasar", "Vue.js", "MySQL", "REST API", "Docker", "Raspberry Pi", "Git", "Postman", "WSL"].map(t => (
+                <span key={t} className="skill-tag">{t}</span>
+              ))}
+            </div>
           </div>
         </section>
       </div>
@@ -646,11 +706,13 @@ export default function Portfolio() {
           <h2 className="s-title">Let's work together</h2>
           <div className="contact-wrap">
             <div>
-              <p className="contact-lede">I'm currently open to freelance projects and full-time roles. Whether you have a project in mind, want to collaborate, or just want to say hi — my inbox is always open.</p>
+              <p className="contact-lede">I'm open to freelance projects and full-time roles. Whether you have a project in mind, want to collaborate, or just want to say hi — my inbox is always open.</p>
               {[
-                { icon:"✉",  text:YOUR_EMAIL,    href:`mailto:${YOUR_EMAIL}` },
-                { icon:"⊙",  text:YOUR_GITHUB,   href:`https://${YOUR_GITHUB}` },
-                { icon:"in", text:YOUR_LINKEDIN,  href:`https://${YOUR_LINKEDIN}` },
+                { icon:"✉",  text: YOUR_EMAIL,    href:`mailto:${YOUR_EMAIL}` },
+                { icon:"📞", text: YOUR_PHONE,    href:`tel:${YOUR_PHONE}` },
+                { icon:"🌐", text: YOUR_WEBSITE,  href:`https://${YOUR_WEBSITE}` },
+                { icon:"⊙",  text: YOUR_GITHUB,   href:`https://${YOUR_GITHUB}` },
+                { icon:"in", text: YOUR_LINKEDIN, href:`https://${YOUR_LINKEDIN}` },
               ].map(l => (
                 <a key={l.text} href={l.href} target="_blank" rel="noopener noreferrer" className="c-link">
                   <span className="c-link-icon">{l.icon}</span><span>{l.text}</span>
@@ -672,9 +734,12 @@ export default function Portfolio() {
                 <label className="form-label">Message</label>
                 <textarea className="form-input" rows={5} placeholder="Tell me about your project or just say hi..." value={formData.message} onChange={e=>setFormData(f=>({...f,message:e.target.value}))}/>
               </div>
-              <button className="send-btn" onClick={handleSubmit} disabled={submitted}>
-                {submitted ? "✅  Message Sent!" : <><SendIcon/>  Send Message</>}
+              <button className="send-btn" onClick={handleSubmit} disabled={submitted || sending}>
+                {submitted ? "Message Sent!" : sending ? "Sending..." : <><SendIcon/> Send Message</>}
               </button>
+              {sendError && (
+                <p style={{ color: "red", fontSize: "13px", marginTop: "6px" }}>{sendError}</p>
+              )}
             </div>
           </div>
         </section>
