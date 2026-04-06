@@ -8,7 +8,7 @@ import emailjs from "@emailjs/browser";
 // ============================================================
 const YOUR_NAME     = "Glen Honrado";
 const YOUR_FIRST    = "Glen";
-const YOUR_TAGLINE  = "I build end-to-end web applications and aspire to secure them — focused on real-world impact, clean code, and growing into cybersecurity.";
+const YOUR_TAGLINE  = "I build end-to-end web applications and aspire to secure them — focused on real-world impact, and growing into cybersecurity.";
 const YOUR_EMAIL    = "glenhonrado282004@gmail.com";
 const YOUR_PHONE    = "09167060932";
 const YOUR_WEBSITE  = "glenprtflio.vercel.app";
@@ -23,15 +23,21 @@ const SKILL_CATEGORIES = [
   { title: "Infrastructure", skills: ["Docker", "Linux", "WSL", "Raspberry Pi", "Kali Linux"] },
   { title: "Tooling",        skills: ["Git", "GitLab", "Postman", "Figma", "VS Code", "GitHub Actions"] },
   { title: "Deployment",     skills: ["Vercel", "Render", "MongoDB Atlas", "Cloudflare", "Indevfinite"] },
+  { title: "AI Tools",       skills: ["Claude", "ChatGPT", "GitHub Copilot", "Cursor", "v0 by Vercel", "Prompt Engineering"] },
 ];
 
 const PROJECTS = [
   {
     id: 1,
-    title: "Administrative System",
-    description: "Comprehensive system covering Facilities Reservation, Visitor Management, and Document Management — with real-time availability, conflict prevention, and a responsive UI.",
+    title: "Facilities Reservation System",
+    description: "Comprehensive system covering Facilities Reservation with real-time availability, conflict prevention, and a responsive UI.",
     tags: ["PHP", "Bootstrap", "MySQL"],
-    images: ["/FacilitiesReservation.png", "/Facilities.png", "/Reservation.png"],
+    images: [
+      "/ViaHale/End_Users_Login.png",
+      "/ViaHale/End_Users_Landing_Page.png",
+      "/ViaHale/End_Users_Date_Filter.png",
+      "/ViaHale/End_Users_Request_Form.png",
+    ],
     github: "https://github.com/xiomairixe",
     accent: "#f59e0b",
   },
@@ -40,7 +46,14 @@ const PROJECTS = [
     title: "My Store Management System",
     description: "Full-stack system for inventory tracking, sales monitoring, and reporting for small retail stores. Built with a REST API backend and a reactive frontend.",
     tags: ["React", "Express.js", "MongoDB", "Tailwind CSS"],
-    images: ["/StoreManagement.png", "/StoreManagement2.png"],
+    images: [
+      "/MyStoreManagement/Dashboard.png",
+      "/MyStoreManagement/Inventoryactions.png",
+      "/MyStoreManagement/NewProductForm.png",
+      "/MyStoreManagement/CheckoutPage.png",
+      "/MyStoreManagement/Checkout1.png",
+      "/MyStoreManagement/Sales.png",
+    ],
     github: "https://github.com/xiomairixe",
     accent: "#34d399",
   },
@@ -49,7 +62,15 @@ const PROJECTS = [
     title: "RFID DTR Attendance System",
     description: "Automated digital time-tracking solution using RFID technology to record employee and student attendance. Tap a card to log time in/out with zero manual input.",
     tags: ["Laravel", "Vue.js", "Quasar", "MySQL"],
-    images: [],
+    images: [
+      "/ClockedIn/Main_Interface.png",
+      "/ClockedIn/ESS_Home_Page.png",
+      "/ClockedIn/ESS_Profile.png",
+      "/ClockedIn/Admin_Dashboard.png",
+      "/ClockedIn/Admin_Dashboard_Dark_Mode.png",
+      "/ClockedIn/Admin_Dashboard_Analytic_Tab.png",
+      "/ClockedIn/Fingerprint_Enrollment.png",
+    ],
     github: "https://github.com/xiomairixe",
     accent: "#60a5fa",
   },
@@ -58,14 +79,38 @@ const PROJECTS = [
     title: "FinTrack — Personal Finance Tracker",
     description: "Personal finance application to track income, expenses, and savings goals — giving users a clear picture of where their money goes.",
     tags: ["React", "Node.js", "MongoDB"],
-    images: [],
+    images: [
+      "/FinTrack/LoadingPage.png",
+      "/FinTrack/Login.png",
+      "/FinTrack/Register.png",
+      "/FinTrack/Dashboard.png",
+      "/FinTrack/Transaction.png",
+    ],
     github: "https://github.com/xiomairixe",
     accent: "#a78bfa",
+  },
+  {
+    id: 5,
+    title: "Tala - Daily Diary Mobile App",
+    description: "A personal mobile diary app to write daily entries, track moods, set goals, and view insights — giving users a mindful space to reflect on their day.",
+    tags: ["React Native", "Node.js", "MongoDB"],
+    images: [
+      "/Tala/DailyDiary.png",
+      "/Tala/EntryForm.png",
+      "/Tala/Calendar.png",
+      "/Tala/Statistics.png",
+      "/Tala/Settings.png",
+      "/Tala/Profile.png",
+      "/Tala/Goals.png",
+      "/Tala/Analytics.png",
+    ],
+    github: "https://github.com/xiomairixe",
+    accent: "#f472b6",
   },
 ];
 
 // ============================================================
-// PARTICLE BACKGROUND  (amber in dark, indigo-tinted in light)
+// PARTICLE BACKGROUND
 // ============================================================
 function ParticleBg({ dark }: { dark: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -99,7 +144,6 @@ function ParticleBg({ dark }: { dark: boolean }) {
       ctx.clearRect(0, 0, W, H);
       const p   = pts.current;
       const col = darkRef.current ? "245,158,11" : "99,102,241";
-
       for (const pt of p) {
         pt.x += pt.vx; pt.y += pt.vy; pt.pulse += pt.ps;
         if (pt.x < 0) pt.x = W; if (pt.x > W) pt.x = 0;
@@ -142,29 +186,31 @@ function ProjectCarousel({ images, accent, title }: { images: string[]; accent: 
   const [loaded,  setLoaded]  = useState<Record<number,boolean>>({});
   const [errored, setErrored] = useState<Record<number,boolean>>({});
 
-  const prev = (e: React.MouseEvent) => { e.stopPropagation(); setIdx(i => (i - 1 + images.length) % images.length); };
-  const next = (e: React.MouseEvent) => { e.stopPropagation(); setIdx(i => (i + 1) % images.length); };
+  const validImages = images.filter(Boolean); // remove empty strings
 
-  if (images.length === 0 || images.every((_, i) => errored[i]))
+  const prev = (e: React.MouseEvent) => { e.stopPropagation(); setIdx(i => (i - 1 + validImages.length) % validImages.length); };
+  const next = (e: React.MouseEvent) => { e.stopPropagation(); setIdx(i => (i + 1) % validImages.length); };
+
+  if (validImages.length === 0 || validImages.every((_, i) => errored[i]))
     return <PlaceholderIllustration accent={accent} />;
 
   return (
-    <div style={{ position:"relative", width:"100%", height:"100%" }}>
-      {images.map((src, i) => (
-        <div key={i} style={{ position: i===0?"relative":"absolute", inset:0, opacity: i===idx?1:0, transition:"opacity 0.38s ease", pointerEvents: i===idx?"auto":"none" }}>
+    <div style={{ position:"relative", width:"100%", height:"100%", background:"#0a0c14" }}>
+      {validImages.map((src, i) => (
+        <div key={i} style={{ position: i===0?"relative":"absolute", inset:0, height:"100%", opacity: i===idx?1:0, transition:"opacity 0.38s ease", pointerEvents: i===idx?"auto":"none" }}>
           {errored[i] ? <PlaceholderIllustration accent={accent} /> : (
             <>
               <img src={src} alt={`${title} — screenshot ${i+1}`}
                 onLoad={() => setLoaded(l => ({...l,[i]:true}))}
                 onError={() => setErrored(e => ({...e,[i]:true}))}
-                style={{ width:"100%", height:"100%", objectFit:"cover", display:"block", opacity: loaded[i]?1:0, transition:"opacity 0.3s" }}
+                style={{ width:"100%", height:"100%", objectFit:"contain", display:"block", opacity: loaded[i]?1:0, transition:"opacity 0.3s" }}
               />
               {!loaded[i] && <div style={{ position:"absolute", inset:0 }}><PlaceholderIllustration accent={accent} /></div>}
             </>
           )}
         </div>
       ))}
-      {images.length > 1 && (
+      {validImages.length > 1 && (
         <>
           <button onClick={prev} aria-label="Previous" style={{ position:"absolute", left:10, top:"50%", transform:"translateY(-50%)", zIndex:10, width:32, height:32, borderRadius:"50%", border:"1px solid rgba(255,255,255,0.15)", background:"rgba(8,12,20,0.75)", color:"#f1f5f9", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", backdropFilter:"blur(6px)", transition:"background 0.18s" }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -173,13 +219,13 @@ function ProjectCarousel({ images, accent, title }: { images: string[]; accent: 
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
           </button>
           <div style={{ position:"absolute", bottom:10, left:"50%", transform:"translateX(-50%)", display:"flex", gap:6, zIndex:10 }}>
-            {images.map((_,i) => (
+            {validImages.map((_,i) => (
               <button key={i} onClick={e => { e.stopPropagation(); setIdx(i); }} aria-label={`Slide ${i+1}`}
                 style={{ width: i===idx?20:6, height:6, borderRadius:99, background: i===idx?accent:"rgba(255,255,255,0.28)", border:"none", cursor:"pointer", padding:0, transition:"width 0.25s, background 0.25s" }} />
             ))}
           </div>
           <div style={{ position:"absolute", top:10, right:10, zIndex:10, background:"rgba(8,12,20,0.75)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:6, padding:"3px 9px", fontSize:11, fontWeight:600, color:"rgba(241,245,249,0.65)", backdropFilter:"blur(6px)", letterSpacing:"0.04em" }}>
-            {idx+1} / {images.length}
+            {idx+1} / {validImages.length}
           </div>
         </>
       )}
@@ -219,6 +265,133 @@ function PlaceholderIllustration({ accent = "#f59e0b" }: { accent?: string }) {
 }
 
 // ============================================================
+// PROJECT MODAL
+// ============================================================
+type Project = typeof PROJECTS[0];
+
+function ProjectModal({ project, onClose }: { project: Project | null; onClose: () => void }) {
+  const [idx,     setIdx]     = useState(0);
+  const [loaded,  setLoaded]  = useState<Record<number, boolean>>({});
+  const [errored, setErrored] = useState<Record<number, boolean>>({});
+
+  const validImages = (project?.images ?? []).filter(Boolean);
+
+  useEffect(() => { if (!project) return; setIdx(0); setLoaded({}); setErrored({}); }, [project]);
+
+  useEffect(() => {
+    if (!project) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft")  setIdx(i => (i - 1 + validImages.length) % Math.max(validImages.length, 1));
+      if (e.key === "ArrowRight") setIdx(i => (i + 1) % Math.max(validImages.length, 1));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [project, onClose, validImages.length]);
+
+  useEffect(() => {
+    document.body.style.overflow = project ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [project]);
+
+  if (!project) return null;
+
+  const hasImages = validImages.length > 0 && !validImages.every((_, i) => errored[i]);
+
+  return (
+    <div onClick={onClose} style={{ position:"fixed", inset:0, zIndex:1000, background:"rgba(0,0,0,0.88)", backdropFilter:"blur(10px)", display:"flex", alignItems:"center", justifyContent:"center", padding:"20px", animation:"modalFadeIn 0.2s ease" }}>
+      <style>{`
+        @keyframes modalFadeIn  { from{opacity:0} to{opacity:1} }
+        @keyframes modalSlideUp { from{opacity:0;transform:translateY(28px) scale(0.98)} to{opacity:1;transform:translateY(0) scale(1)} }
+        .modal-close-btn:hover { background:rgba(255,255,255,0.15) !important; }
+        .modal-arrow-btn:hover { background:rgba(255,255,255,0.2) !important; }
+        .modal-gh-btn:hover    { border-color:rgba(217,119,6,0.5) !important; background:var(--amberGlow) !important; }
+      `}</style>
+
+      <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg2)", border:"1px solid var(--border2)", borderRadius:20, width:"100%", maxWidth:920, maxHeight:"90vh", overflow:"hidden", display:"flex", flexDirection:"column", animation:"modalSlideUp 0.28s cubic-bezier(0.16,1,0.3,1)", boxShadow:"0 32px 80px rgba(0,0,0,0.6)" }}>
+
+        {/* Image area */}
+        <div style={{ position:"relative", width:"100%", aspectRatio:"16/9", flexShrink:0, background:"#0a0c14", minHeight:180 }}>
+          {hasImages ? (
+            <>
+              {validImages.map((src, i) => (
+                <div key={i} style={{ position: i===0?"relative":"absolute", inset:0, height:"100%", opacity: i===idx?1:0, transition:"opacity 0.38s ease", pointerEvents: i===idx?"auto":"none" }}>
+                  {errored[i] ? <PlaceholderIllustration accent={project.accent} /> : (
+                    <>
+                      <img src={src} alt={`${project.title} screenshot ${i + 1}`}
+                        onLoad={() => setLoaded(l => ({...l,[i]:true}))}
+                        onError={() => setErrored(e => ({...e,[i]:true}))}
+                        style={{ width:"100%", height:"100%", objectFit:"contain", display:"block", opacity: loaded[i]?1:0, transition:"opacity 0.3s" }}
+                      />
+                      {!loaded[i] && <div style={{ position:"absolute", inset:0 }}><PlaceholderIllustration accent={project.accent} /></div>}
+                    </>
+                  )}
+                </div>
+              ))}
+              {validImages.length > 1 && (
+                <>
+                  <button className="modal-arrow-btn" onClick={() => setIdx(i => (i-1+validImages.length)%validImages.length)} style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", zIndex:10, width:42, height:42, borderRadius:"50%", border:"1px solid rgba(255,255,255,0.18)", background:"rgba(8,12,20,0.82)", color:"#f1f5f9", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", backdropFilter:"blur(8px)", transition:"background 0.18s" }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                  </button>
+                  <button className="modal-arrow-btn" onClick={() => setIdx(i => (i+1)%validImages.length)} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", zIndex:10, width:42, height:42, borderRadius:"50%", border:"1px solid rgba(255,255,255,0.18)", background:"rgba(8,12,20,0.82)", color:"#f1f5f9", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", backdropFilter:"blur(8px)", transition:"background 0.18s" }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                  </button>
+                  <div style={{ position:"absolute", bottom:14, left:"50%", transform:"translateX(-50%)", display:"flex", gap:7, zIndex:10 }}>
+                    {validImages.map((_,i) => (
+                      <button key={i} onClick={() => setIdx(i)} style={{ width:i===idx?22:7, height:7, borderRadius:99, background:i===idx?project.accent:"rgba(255,255,255,0.3)", border:"none", cursor:"pointer", padding:0, transition:"width 0.25s, background 0.25s" }} />
+                    ))}
+                  </div>
+                  <div style={{ position:"absolute", top:14, right:56, zIndex:10, background:"rgba(8,12,20,0.8)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:6, padding:"4px 10px", fontSize:11, fontWeight:600, color:"rgba(241,245,249,0.7)", backdropFilter:"blur(6px)" }}>
+                    {idx+1} / {validImages.length}
+                  </div>
+                </>
+              )}
+            </>
+          ) : (
+            <PlaceholderIllustration accent={project.accent} />
+          )}
+
+          <div style={{ position:"absolute", top:0, left:0, right:0, height:3, background:`linear-gradient(90deg,${project.accent},transparent)`, zIndex:5 }} />
+          <button className="modal-close-btn" onClick={onClose} aria-label="Close" style={{ position:"absolute", top:14, right:14, zIndex:20, width:36, height:36, borderRadius:"50%", border:"1px solid rgba(255,255,255,0.18)", background:"rgba(8,12,20,0.8)", color:"#f1f5f9", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", backdropFilter:"blur(6px)", transition:"background 0.18s" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        {/* Info area */}
+        <div style={{ padding:"28px 32px 32px", overflowY:"auto", flex:1 }}>
+          <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:16, marginBottom:14, flexWrap:"wrap" }}>
+            <div>
+              <p style={{ fontSize:11, fontWeight:700, letterSpacing:"0.13em", textTransform:"uppercase", color:project.accent, marginBottom:6 }}>Project</p>
+              <h2 style={{ fontFamily:"'DM Serif Display',serif", fontSize:"clamp(22px,3vw,30px)", color:"var(--text)", letterSpacing:"-0.5px", lineHeight:1.1, margin:0 }}>{project.title}</h2>
+            </div>
+            <a href={project.github} target="_blank" rel="noopener noreferrer" className="modal-gh-btn"
+              style={{ display:"inline-flex", alignItems:"center", gap:8, fontSize:13, fontWeight:600, padding:"10px 18px", borderRadius:9, border:"1px solid var(--border2)", color:"var(--text)", background:"var(--bg3)", textDecoration:"none", flexShrink:0, transition:"border-color 0.18s, background 0.18s" }}>
+              <GithubIcon size={14}/> View on GitHub
+            </a>
+          </div>
+          <p style={{ fontSize:15, lineHeight:1.85, color:"var(--muted)", fontWeight:300, marginBottom:24, maxWidth:640 }}>{project.description}</p>
+          <div style={{ borderTop:"1px solid var(--border)", marginBottom:20 }} />
+          <div>
+            <p style={{ fontSize:11, fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"var(--muted)", marginBottom:10 }}>Tech Stack</p>
+            <div style={{ display:"flex", flexWrap:"wrap", gap:7 }}>
+              {project.tags.map(tag => (
+                <span key={tag} style={{ fontSize:12, fontWeight:600, padding:"5px 13px", borderRadius:6, background:"var(--amberDim)", border:`1px solid ${project.accent}44`, color:project.accent }}>{tag}</span>
+              ))}
+            </div>
+          </div>
+          {validImages.length > 1 && (
+            <p style={{ fontSize:11, color:"var(--dim)", marginTop:18, display:"flex", alignItems:"center", gap:6 }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/></svg>
+              Use ← → arrow keys to navigate · ESC to close
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
 // ICONS
 // ============================================================
 function GithubIcon({ size=18 }: { size?: number }) {
@@ -239,22 +412,29 @@ function SunIcon() {
 function MoonIcon() {
   return <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>;
 }
+function ExpandIcon() {
+  return <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>;
+}
 
 // ============================================================
 // MAIN
 // ============================================================
 export default function Portfolio() {
-  const [dark,      setDark]      = useState(true);
-  const [displayed, setDisplayed] = useState("");
-  const [deleting,  setDeleting]  = useState(false);
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [formData,  setFormData]  = useState({ name:"", email:"", message:"" });
-  const [submitted, setSubmitted] = useState(false);
+  const [dark,          setDark]          = useState(true);
+  const [displayed,     setDisplayed]     = useState("");
+  const [deleting,      setDeleting]      = useState(false);
+  const [roleIndex,     setRoleIndex]     = useState(0);
+  const [formData,      setFormData]      = useState({ name:"", email:"", message:"" });
+  const [submitted,     setSubmitted]     = useState(false);
+  const [sending,       setSending]       = useState(false);
+  const [sendError,     setSendError]     = useState("");
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     if (saved) setDark(saved === "dark");
   }, []);
+
   const toggleTheme = () => setDark(d => { localStorage.setItem("theme", !d ? "dark" : "light"); return !d; });
 
   useEffect(() => {
@@ -270,28 +450,17 @@ export default function Portfolio() {
     return () => clearTimeout(timer);
   }, [displayed, deleting, roleIndex]);
 
-  const [sending, setSending] = useState(false);
-  const [sendError, setSendError] = useState("");
-
   const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.message) return;
-    setSending(true);
-    setSendError("");
+    setSending(true); setSendError("");
     try {
-      await emailjs.send(
-        "service_09z44wz",
-        "template_e7dqknm",
-        {
-          from_name:  formData.name,
-          from_email: formData.email,
-          message:    formData.message,
-        },
-        "wkqj8O7W2q3M8h37j"
-      );
+      await emailjs.send("service_09z44wz", "template_e7dqknm", {
+        from_name: formData.name, from_email: formData.email, message: formData.message,
+      }, "wkqj8O7W2q3M8h37j");
       setSubmitted(true);
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({ name:"", email:"", message:"" });
       setTimeout(() => setSubmitted(false), 4000);
-    } catch (err) {
+    } catch {
       setSendError("Something went wrong. Please try again.");
     } finally {
       setSending(false);
@@ -307,181 +476,139 @@ export default function Portfolio() {
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        a { text-decoration: none; color: inherit; }
+        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+        html { scroll-behavior:smooth; }
+        a { text-decoration:none; color:inherit; }
 
         .dark {
-          --bg:          #080c14;
-          --bg2:         #0d1220;
-          --bg3:         #111827;
-          --border:      rgba(255,255,255,0.07);
-          --border2:     rgba(255,255,255,0.13);
-          --text:        #f1f5f9;
-          --muted:       #64748b;
-          --dim:         #2d3748;
-          --amber:       #f59e0b;
-          --amber2:      #fbbf24;
-          --amberDim:    rgba(245,158,11,0.12);
-          --amberGlow:   rgba(245,158,11,0.06);
-          --navBg:       rgba(8,12,20,0.82);
-          --shadow:      rgba(0,0,0,0.4);
-          --toggleBg:    rgba(255,255,255,0.07);
-          --toggleBorder:rgba(255,255,255,0.12);
-          --toggleColor: #94a3b8;
+          --bg:#080c14; --bg2:#0d1220; --bg3:#111827;
+          --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
+          --text:#f1f5f9; --muted:#64748b; --dim:#2d3748;
+          --amber:#f59e0b; --amber2:#fbbf24;
+          --amberDim:rgba(245,158,11,0.12); --amberGlow:rgba(245,158,11,0.06);
+          --navBg:rgba(8,12,20,0.82); --shadow:rgba(0,0,0,0.4);
+          --toggleBg:rgba(255,255,255,0.07); --toggleBorder:rgba(255,255,255,0.12); --toggleColor:#94a3b8;
         }
-
         .light {
-          --bg:          #f8fafc;
-          --bg2:         #ffffff;
-          --bg3:         #f1f5f9;
-          --border:      rgba(0,0,0,0.08);
-          --border2:     rgba(0,0,0,0.13);
-          --text:        #0f172a;
-          --muted:       #475569;
-          --dim:         #94a3b8;
-          --amber:       #d97706;
-          --amber2:      #b45309;
-          --amberDim:    rgba(217,119,6,0.10);
-          --amberGlow:   rgba(217,119,6,0.05);
-          --navBg:       rgba(248,250,252,0.88);
-          --shadow:      rgba(0,0,0,0.08);
-          --toggleBg:    rgba(0,0,0,0.05);
-          --toggleBorder:rgba(0,0,0,0.12);
-          --toggleColor: #64748b;
+          --bg:#f8fafc; --bg2:#ffffff; --bg3:#f1f5f9;
+          --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.13);
+          --text:#0f172a; --muted:#475569; --dim:#94a3b8;
+          --amber:#d97706; --amber2:#b45309;
+          --amberDim:rgba(217,119,6,0.10); --amberGlow:rgba(217,119,6,0.05);
+          --navBg:rgba(248,250,252,0.88); --shadow:rgba(0,0,0,0.08);
+          --toggleBg:rgba(0,0,0,0.05); --toggleBorder:rgba(0,0,0,0.12); --toggleColor:#64748b;
         }
 
-        .root {
-          font-family: 'DM Sans', system-ui, sans-serif;
-          background: var(--bg); color: var(--text);
-          min-height: 100vh; overflow-x: hidden;
-          transition: background 0.35s, color 0.35s;
-        }
+        .root { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; transition:background 0.35s, color 0.35s; }
 
-        nav {
-          position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-          background: var(--navBg);
-          backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-          border-bottom: 1px solid var(--border);
-          transition: background 0.35s, border-color 0.35s;
-        }
-        .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 36px; display: flex; align-items: center; justify-content: space-between; height: 60px; }
-        .nav-logo { font-family:'DM Serif Display',serif; font-size:20px; color:var(--text); transition:color 0.35s; }
-        .nav-logo span { color:var(--amber); transition:color 0.35s; }
+        nav { position:fixed; top:0; left:0; right:0; z-index:50; background:var(--navBg); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid var(--border); transition:background 0.35s, border-color 0.35s; }
+        .nav-inner { max-width:1100px; margin:0 auto; padding:0 36px; display:flex; align-items:center; justify-content:space-between; height:60px; }
+        .nav-logo { font-family:'DM Serif Display',serif; font-size:20px; color:var(--text); }
+        .nav-logo span { color:var(--amber); }
         .nav-links { display:flex; align-items:center; gap:28px; }
         .nav-link { font-size:13.5px; font-weight:500; color:var(--muted); transition:color 0.18s; }
         .nav-link:hover { color:var(--text); }
         .nav-cta { font-size:13px; font-weight:500; color:#fff; background:var(--amber); padding:8px 18px; border-radius:6px; transition:background 0.18s, transform 0.18s; }
-        .light .nav-cta { color:#fff; }
         .nav-cta:hover { background:var(--amber2); transform:translateY(-1px); }
-
-        .theme-toggle {
-          display:flex; align-items:center; justify-content:center;
-          width:36px; height:36px; border-radius:9px; flex-shrink:0;
-          background:var(--toggleBg); border:1px solid var(--toggleBorder);
-          color:var(--toggleColor); cursor:pointer;
-          transition:background 0.2s, border-color 0.2s, color 0.2s, transform 0.18s;
-        }
+        .theme-toggle { display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:9px; flex-shrink:0; background:var(--toggleBg); border:1px solid var(--toggleBorder); color:var(--toggleColor); cursor:pointer; transition:background 0.2s, border-color 0.2s, color 0.2s, transform 0.18s; }
         .theme-toggle:hover { background:var(--amberDim); border-color:var(--amber); color:var(--amber); transform:scale(1.08); }
-
         @media (max-width:640px) { .nav-links .nav-link { display:none; } .nav-inner { padding:0 20px; } }
 
         .hero { position:relative; z-index:2; min-height:100vh; padding-top:60px; display:flex; align-items:center; max-width:1100px; margin:0 auto; padding-left:36px; padding-right:36px; gap:60px; }
         @media (max-width:860px) { .hero { flex-direction:column; align-items:flex-start; padding-top:120px; padding-bottom:60px; gap:48px; } .hero-photo-col { display:none; } }
         @media (max-width:480px) { .hero { padding-left:20px; padding-right:20px; } }
         .hero-left { flex:1; min-width:0; }
-
-        .hero-eyebrow { display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--amber); background:var(--amberDim); border:1px solid rgba(217,119,6,0.22); padding:6px 14px; border-radius:99px; margin-bottom:28px; transition:color 0.35s, background 0.35s; }
-        .eyebrow-dot { width:6px; height:6px; border-radius:50%; background:var(--amber); box-shadow:0 0 8px var(--amber); animation:pulse 2.4s ease-in-out infinite; transition:background 0.35s, box-shadow 0.35s; }
+        .hero-eyebrow { display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--amber); background:var(--amberDim); border:1px solid rgba(217,119,6,0.22); padding:6px 14px; border-radius:99px; margin-bottom:28px; }
+        .eyebrow-dot { width:6px; height:6px; border-radius:50%; background:var(--amber); box-shadow:0 0 8px var(--amber); animation:pulse 2.4s ease-in-out infinite; }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-        .hero-name { font-family:'DM Serif Display',serif; font-size:clamp(50px,7vw,84px); line-height:1.0; letter-spacing:-2px; color:var(--text); margin-bottom:18px; transition:color 0.35s; }
-        .hero-name .dim { color:var(--dim); transition:color 0.35s; }
-        .hero-role-line { font-size:clamp(17px,2.2vw,22px); color:var(--muted); margin-bottom:24px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; transition:color 0.35s; }
-        .hero-role-typed { color:var(--amber); font-weight:600; transition:color 0.35s; }
-        .caret { display:inline-block; width:2px; height:1em; background:var(--amber); vertical-align:middle; animation:blink 1s step-end infinite; transition:background 0.35s; }
+        .hero-name { font-family:'DM Serif Display',serif; font-size:clamp(50px,7vw,84px); line-height:1.0; letter-spacing:-2px; color:var(--text); margin-bottom:18px; }
+        .hero-name .dim { color:var(--dim); }
+        .hero-role-line { font-size:clamp(17px,2.2vw,22px); color:var(--muted); margin-bottom:24px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+        .hero-role-typed { color:var(--amber); font-weight:600; }
+        .caret { display:inline-block; width:2px; height:1em; background:var(--amber); vertical-align:middle; animation:blink 1s step-end infinite; }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-        .hero-desc { font-size:16px; line-height:1.85; color:var(--muted); max-width:480px; margin-bottom:38px; font-weight:300; transition:color 0.35s; }
+        .hero-desc { font-size:16px; line-height:1.85; color:var(--muted); max-width:480px; margin-bottom:38px; font-weight:300; }
         .hero-actions { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:40px; }
-
         .btn-primary { display:inline-flex; align-items:center; gap:8px; background:var(--amber); color:#fff; font-size:14px; font-weight:600; padding:13px 26px; border-radius:8px; border:none; cursor:pointer; font-family:inherit; transition:background 0.18s, transform 0.18s; box-shadow:0 4px 24px rgba(217,119,6,0.3); }
         .btn-primary:hover { background:var(--amber2); transform:translateY(-1px); }
         .btn-ghost { display:inline-flex; align-items:center; gap:8px; background:transparent; color:var(--text); font-size:14px; font-weight:500; padding:12px 22px; border-radius:8px; border:1px solid var(--border2); cursor:pointer; font-family:inherit; transition:border-color 0.18s, background 0.18s, color 0.35s, transform 0.18s; }
         .btn-ghost:hover { border-color:rgba(217,119,6,0.4); background:var(--amberGlow); transform:translateY(-1px); }
-
         .hero-socials { display:flex; gap:14px; align-items:center; }
         .s-link { display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:8px; border:1px solid var(--border); color:var(--muted); transition:border-color 0.18s, color 0.18s, transform 0.18s; }
         .s-link:hover { border-color:var(--amber); color:var(--amber); transform:translateY(-2px); }
 
         .hero-photo-col { flex-shrink:0; width:320px; position:relative; }
-        .hero-photo-frame { width:100%; aspect-ratio:3/4; border-radius:20px; overflow:hidden; background:var(--bg3); border:1px solid var(--border); position:relative; transition:background 0.35s, border-color 0.35s; }
-        .hero-photo-frame::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--amber),transparent); z-index:2; transition:background 0.35s; }
+        .hero-photo-frame { width:100%; aspect-ratio:3/4; border-radius:20px; overflow:hidden; background:var(--bg3); border:1px solid var(--border); position:relative; }
+        .hero-photo-frame::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--amber),transparent); z-index:2; }
         .hero-photo-frame img { width:100%; height:100%; object-fit:cover; display:block; }
         .photo-ph { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; color:var(--dim); }
         .photo-ph p { font-size:12px; color:var(--muted); text-align:center; line-height:1.6; }
-        .hero-photo-label { position:absolute; bottom:-14px; right:-14px; background:var(--amber); color:#fff; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:8px 14px; border-radius:8px; box-shadow:0 4px 20px rgba(217,119,6,0.35); transition:background 0.35s; }
-        .hero-photo-year { position:absolute; top:-14px; left:-14px; background:var(--bg3); border:1px solid var(--border); color:var(--muted); font-size:12px; font-weight:500; padding:8px 14px; border-radius:8px; transition:background 0.35s, border-color 0.35s, color 0.35s; }
-        .hero-photo-year span { color:var(--text); font-weight:600; transition:color 0.35s; }
 
         .page-wrap { position:relative; z-index:2; max-width:1100px; margin:0 auto; padding:0 36px; }
         @media (max-width:480px) { .page-wrap { padding:0 20px; } }
         .section { padding:80px 0; }
-        .s-label { font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); margin-bottom:8px; transition:color 0.35s; }
-        .s-title { font-family:'DM Serif Display',serif; font-size:clamp(28px,3.5vw,40px); color:var(--text); letter-spacing:-1px; margin-bottom:10px; line-height:1.15; transition:color 0.35s; }
-        .s-sub { font-size:15px; color:var(--muted); margin-bottom:44px; font-weight:300; max-width:500px; line-height:1.75; transition:color 0.35s; }
-        hr { position:relative; z-index:2; border:none; border-top:1px solid var(--border); max-width:1100px; margin:0 auto; transition:border-color 0.35s; }
+        .s-label { font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); margin-bottom:8px; }
+        .s-title { font-family:'DM Serif Display',serif; font-size:clamp(28px,3.5vw,40px); color:var(--text); letter-spacing:-1px; margin-bottom:10px; line-height:1.15; }
+        .s-sub { font-size:15px; color:var(--muted); margin-bottom:44px; font-weight:300; max-width:500px; line-height:1.75; }
+        hr { position:relative; z-index:2; border:none; border-top:1px solid var(--border); max-width:1100px; margin:0 auto; }
 
         .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; }
         @media (max-width:700px) { .about-grid { grid-template-columns:1fr; gap:32px; } }
-        .about-text { font-size:15px; line-height:1.85; color:var(--muted); font-weight:300; transition:color 0.35s; }
+        .about-text { font-size:15px; line-height:1.85; color:var(--muted); font-weight:300; }
         .about-text p+p { margin-top:16px; }
-        .about-text strong { color:var(--text); font-weight:600; transition:color 0.35s; }
+        .about-text strong { color:var(--text); font-weight:600; }
         .fact-row { display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border-radius:10px; background:var(--bg2); border:1px solid var(--border); transition:border-color 0.2s, background 0.35s; margin-bottom:10px; }
         .fact-row:hover { border-color:rgba(217,119,6,0.3); }
         .fact-icon { font-size:17px; flex-shrink:0; margin-top:1px; }
-        .fact-label { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--amber); margin-bottom:3px; transition:color 0.35s; }
-        .fact-value { font-size:14px; color:var(--text); font-weight:500; transition:color 0.35s; }
+        .fact-label { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--amber); margin-bottom:3px; }
+        .fact-value { font-size:14px; color:var(--text); font-weight:500; }
 
         .skills-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
         @media (max-width:760px) { .skills-grid { grid-template-columns:1fr 1fr; } }
         @media (max-width:480px) { .skills-grid { grid-template-columns:1fr; } }
         .skill-card { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:20px; transition:border-color 0.2s, transform 0.2s, background 0.35s; }
         .skill-card:hover { border-color:rgba(217,119,6,0.25); transform:translateY(-2px); }
-        .skill-card-head { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--amber); margin-bottom:14px; transition:color 0.35s; }
+        .skill-card-head { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--amber); margin-bottom:14px; }
         .skill-tags { display:flex; flex-wrap:wrap; gap:6px; }
         .skill-tag { font-size:12px; font-weight:500; padding:4px 10px; border-radius:5px; background:var(--bg3); border:1px solid var(--border); color:var(--muted); transition:color 0.18s, border-color 0.18s, background 0.35s; }
         .skill-tag:hover { color:var(--text); border-color:rgba(217,119,6,0.3); }
 
         .project-row { display:grid; grid-template-columns:1fr 420px; background:var(--bg2); border:1px solid var(--border); border-radius:16px; overflow:hidden; transition:border-color 0.22s, transform 0.22s, background 0.35s; margin-bottom:12px; }
         .project-row:hover { border-color:rgba(217,119,6,0.25); transform:translateY(-2px); }
-        @media (max-width:860px) { .project-row { grid-template-columns:1fr; } }
+        @media (max-width:860px) {
+          .project-row { grid-template-columns:1fr; }
+          .project-visual { border-left:none !important; border-top:1px solid var(--border) !important; height:260px !important; aspect-ratio:unset !important; }
+        }
+        @media (max-width:480px) { .project-visual { height:210px !important; } }
+
         .project-info { padding:36px 40px; display:flex; flex-direction:column; justify-content:center; }
         @media (max-width:480px) { .project-info { padding:28px 24px; } }
-        .project-num { font-family:'DM Serif Display',serif; font-size:13px; color:var(--dim); margin-bottom:16px; letter-spacing:0.05em; transition:color 0.35s; }
-        .project-name { font-family:'DM Serif Display',serif; font-size:clamp(20px,2.5vw,26px); color:var(--text); margin-bottom:14px; line-height:1.2; letter-spacing:-0.5px; transition:color 0.35s; }
-        .project-desc { font-size:14px; line-height:1.8; color:var(--muted); font-weight:300; margin-bottom:22px; max-width:400px; transition:color 0.35s; }
-        .project-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:28px; }
-        .project-tag { font-size:11.5px; font-weight:600; padding:4px 10px; border-radius:4px; background:var(--bg3); border:1px solid var(--border); color:var(--muted); transition:background 0.35s, border-color 0.35s, color 0.35s; }
+        .project-num { font-family:'DM Serif Display',serif; font-size:13px; color:var(--dim); margin-bottom:16px; letter-spacing:0.05em; }
+        .project-name { font-family:'DM Serif Display',serif; font-size:clamp(20px,2.5vw,26px); color:var(--text); margin-bottom:14px; line-height:1.2; letter-spacing:-0.5px; }
+        .project-desc { font-size:14px; line-height:1.8; color:var(--muted); font-weight:300; margin-bottom:22px; max-width:400px; }
+        .project-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px; }
+        .project-tag { font-size:11.5px; font-weight:600; padding:4px 10px; border-radius:4px; background:var(--bg3); border:1px solid var(--border); color:var(--muted); }
+        .project-btns { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
         .proj-link { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:500; padding:8px 16px; border-radius:7px; border:1px solid var(--border); color:var(--muted); width:fit-content; transition:all 0.18s; }
         .proj-link:hover { color:var(--text); border-color:rgba(217,119,6,0.4); background:var(--amberGlow); }
-        .project-visual { aspect-ratio:16/11; overflow:hidden; background:var(--bg3); border-left:1px solid var(--border); position:relative; transition:background 0.35s, border-color 0.35s; }
-        @media (max-width:860px) { .project-visual { border-left:none; border-top:1px solid var(--border); aspect-ratio:16/9; } }
+        .proj-expand { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:8px 14px; border-radius:7px; border:1px solid var(--border); color:var(--muted); cursor:pointer; background:transparent; font-family:inherit; transition:all 0.18s; }
+        .proj-expand:hover { color:var(--text); border-color:rgba(217,119,6,0.4); background:var(--amberGlow); }
+        .project-visual { aspect-ratio:16/11; overflow:hidden; background:#0a0c14; border-left:1px solid var(--border); position:relative; transition:border-color 0.35s; }
 
-        /* ── INTERNSHIP ── */
         .internship-card { background:var(--bg2); border:1px solid var(--border); border-radius:16px; padding:32px 36px; transition:border-color 0.2s, background 0.35s; }
         .internship-card:hover { border-color:rgba(217,119,6,0.25); }
         .internship-header { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
-        .internship-company { font-family:'DM Serif Display',serif; font-size:20px; color:var(--text); letter-spacing:-0.4px; transition:color 0.35s; }
-        .internship-role { font-size:13px; color:var(--amber); font-weight:600; margin-top:4px; transition:color 0.35s; }
-        .internship-year { font-size:12px; font-weight:600; color:var(--muted); background:var(--bg3); border:1px solid var(--border); padding:5px 12px; border-radius:99px; flex-shrink:0; transition:all 0.35s; }
+        .internship-company { font-family:'DM Serif Display',serif; font-size:20px; color:var(--text); letter-spacing:-0.4px; }
+        .internship-role { font-size:13px; color:var(--amber); font-weight:600; margin-top:4px; }
+        .internship-year { font-size:12px; font-weight:600; color:var(--muted); background:var(--bg3); border:1px solid var(--border); padding:5px 12px; border-radius:99px; flex-shrink:0; }
         .internship-bullets { list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
-        .internship-bullets li { font-size:14px; line-height:1.75; color:var(--muted); font-weight:300; padding-left:16px; position:relative; transition:color 0.35s; }
-        .internship-bullets li::before { content:'→'; position:absolute; left:0; color:var(--amber); font-size:12px; top:2px; transition:color 0.35s; }
+        .internship-bullets li { font-size:14px; line-height:1.75; color:var(--muted); font-weight:300; padding-left:16px; position:relative; }
+        .internship-bullets li::before { content:'→'; position:absolute; left:0; color:var(--amber); font-size:12px; top:2px; }
         .internship-stack { display:flex; flex-wrap:wrap; gap:6px; }
 
         .contact-wrap { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
         @media (max-width:700px) { .contact-wrap { grid-template-columns:1fr; gap:40px; } }
-        .contact-lede { font-size:15px; color:var(--muted); line-height:1.85; font-weight:300; margin-bottom:32px; transition:color 0.35s; }
+        .contact-lede { font-size:15px; color:var(--muted); line-height:1.85; font-weight:300; margin-bottom:32px; }
         .c-link { display:flex; align-items:center; gap:12px; padding:13px 16px; border-radius:10px; border:1px solid var(--border); background:var(--bg2); font-size:13.5px; color:var(--muted); transition:border-color 0.18s, color 0.18s, transform 0.18s, background 0.35s; margin-bottom:10px; }
         .c-link:hover { border-color:rgba(217,119,6,0.3); color:var(--text); transform:translateX(4px); }
         .c-link-icon { font-size:16px; width:20px; text-align:center; flex-shrink:0; }
@@ -489,7 +616,7 @@ export default function Portfolio() {
         .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
         @media (max-width:480px) { .form-row { grid-template-columns:1fr; } }
         .form-group { display:flex; flex-direction:column; gap:6px; }
-        .form-label { font-size:11.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); transition:color 0.35s; }
+        .form-label { font-size:11.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); }
         .form-input { background:var(--bg2); border:1px solid var(--border); border-radius:9px; padding:11px 14px; font-family:inherit; font-size:14px; color:var(--text); outline:none; transition:border-color 0.18s, background 0.35s, color 0.35s; font-weight:300; }
         .form-input:focus { border-color:rgba(217,119,6,0.5); background:var(--amberGlow); }
         .form-input::placeholder { color:var(--dim); }
@@ -498,19 +625,16 @@ export default function Portfolio() {
         .send-btn:hover:not(:disabled) { background:var(--amber2); }
         .send-btn:disabled { opacity:0.6; cursor:not-allowed; }
 
-        .footer-wrap { position:relative; z-index:2; border-top:1px solid var(--border); transition:border-color 0.35s; }
+        .footer-wrap { position:relative; z-index:2; border-top:1px solid var(--border); }
         footer { max-width:1100px; margin:0 auto; padding:28px 36px; display:flex; align-items:center; justify-content:space-between; }
         @media (max-width:480px) { footer { flex-direction:column; gap:12px; text-align:center; padding:24px 20px; } }
-        .footer-text { font-size:13px; color:var(--dim); transition:color 0.35s; }
+        .footer-text { font-size:13px; color:var(--dim); }
         .footer-links { display:flex; gap:20px; }
         .footer-link { font-size:13px; color:var(--dim); transition:color 0.18s; }
         .footer-link:hover { color:var(--amber); }
 
-        .light .skill-card,
-        .light .fact-row,
-        .light .project-row,
-        .light .internship-card,
-        .light .c-link { box-shadow:0 1px 3px var(--shadow); }
+        .light .skill-card, .light .fact-row, .light .project-row,
+        .light .internship-card, .light .c-link { box-shadow:0 1px 3px var(--shadow); }
 
         ::-webkit-scrollbar { width:4px; }
         ::-webkit-scrollbar-track { background:var(--bg); }
@@ -526,7 +650,7 @@ export default function Portfolio() {
         .hero-left > *:nth-child(6){animation-delay:0.47s}
       `}</style>
 
-      {/* ── NAV ── */}
+      {/* NAV */}
       <nav>
         <div className="nav-inner">
           <a href="#" className="nav-logo">Glen<span>.</span></a>
@@ -534,12 +658,7 @@ export default function Portfolio() {
             {["About","Skills","Experience","Projects","Contact"].map(l => (
               <a key={l} href={`#${l.toLowerCase()}`} className="nav-link">{l}</a>
             ))}
-            <button
-              className="theme-toggle"
-              onClick={toggleTheme}
-              aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
-              title={dark ? "Light mode" : "Dark mode"}
-            >
+            <button className="theme-toggle" onClick={toggleTheme} aria-label={dark?"Switch to light mode":"Switch to dark mode"}>
               {dark ? <SunIcon /> : <MoonIcon />}
             </button>
             <a href="#contact" className="nav-cta">Hire Me</a>
@@ -547,7 +666,7 @@ export default function Portfolio() {
         </div>
       </nav>
 
-      {/* ── HERO ── */}
+      {/* HERO */}
       <section style={{ position:"relative", zIndex:2 }}>
         <div className="hero">
           <div className="hero-left">
@@ -587,7 +706,7 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* ── ABOUT ── */}
+      {/* ABOUT */}
       <div className="page-wrap">
         <section id="about" className="section">
           <p className="s-label">About</p>
@@ -600,10 +719,10 @@ export default function Portfolio() {
             </div>
             <div>
               {[
-                { icon:"🎓", label:"Education",          value:"BS Information Technology — Bestlink College of the Philippines (2022–2026)" },
-                { icon:"📍", label:"Location",           value:"San Jose del Monte, Bulacan · Remote-friendly" },
-                { icon:"💼", label:"Looking for",        value:"Full-time roles & freelance projects" },
-                { icon:"🔐", label:"Aspiring toward",    value:"Cybersecurity — web app security, cloud infra, network systems" },
+                { icon:"🎓", label:"Education",       value:"BS Information Technology — Bestlink College of the Philippines (2022–2026)" },
+                { icon:"📍", label:"Location",        value:"San Jose del Monte, Bulacan · Remote-friendly" },
+                { icon:"💼", label:"Looking for",     value:"Full-time roles & freelance projects" },
+                { icon:"🔐", label:"Aspiring toward", value:"Cybersecurity — web app security, cloud infra, network systems" },
               ].map(f => (
                 <div key={f.label} className="fact-row">
                   <span className="fact-icon">{f.icon}</span>
@@ -617,7 +736,7 @@ export default function Portfolio() {
 
       <hr/>
 
-      {/* ── SKILLS ── */}
+      {/* SKILLS */}
       <div className="page-wrap">
         <section id="skills" className="section">
           <p className="s-label">Skills</p>
@@ -636,7 +755,7 @@ export default function Portfolio() {
 
       <hr/>
 
-      {/* ── EXPERIENCE (INTERNSHIP) ── */}
+      {/* EXPERIENCE */}
       <div className="page-wrap">
         <section id="experience" className="section">
           <p className="s-label">Experience</p>
@@ -657,7 +776,7 @@ export default function Portfolio() {
               <li>Tested API endpoints via Postman and managed source control with Git in a WSL environment.</li>
             </ul>
             <div className="internship-stack">
-              {["Laravel", "Quasar", "Vue.js", "MySQL", "REST API", "Docker", "Raspberry Pi", "Git", "Postman", "WSL"].map(t => (
+              {["Laravel","Quasar","Vue.js","MySQL","REST API","Docker","Raspberry Pi","Git","Postman","WSL"].map(t => (
                 <span key={t} className="skill-tag">{t}</span>
               ))}
             </div>
@@ -667,7 +786,7 @@ export default function Portfolio() {
 
       <hr/>
 
-      {/* ── PROJECTS ── */}
+      {/* PROJECTS */}
       <div className="page-wrap">
         <section id="projects" className="section">
           <p className="s-label">Projects</p>
@@ -680,11 +799,22 @@ export default function Portfolio() {
                 <h3 className="project-name">{p.title}</h3>
                 <p className="project-desc">{p.description}</p>
                 <div className="project-tags">{p.tags.map(tag => <span key={tag} className="project-tag">{tag}</span>)}</div>
-                <a href={p.github} target="_blank" rel="noopener noreferrer" className="proj-link">
-                  <GithubIcon size={14}/> View Code
-                </a>
+                <div className="project-btns">
+                  <a href={p.github} target="_blank" rel="noopener noreferrer" className="proj-link">
+                    <GithubIcon size={14}/> View Code
+                  </a>
+                  {p.images.filter(Boolean).length > 0 && (
+                    <button className="proj-expand" onClick={() => setActiveProject(p)}>
+                      <ExpandIcon /> Preview
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="project-visual">
+              <div
+                className="project-visual"
+                onClick={() => p.images.filter(Boolean).length > 0 && setActiveProject(p)}
+                style={{ cursor: p.images.filter(Boolean).length > 0 ? "pointer" : "default" }}
+              >
                 <ProjectCarousel images={p.images} accent={p.accent} title={p.title}/>
               </div>
             </div>
@@ -699,7 +829,7 @@ export default function Portfolio() {
 
       <hr/>
 
-      {/* ── CONTACT ── */}
+      {/* CONTACT */}
       <div className="page-wrap">
         <section id="contact" className="section">
           <p className="s-label">Contact</p>
@@ -708,11 +838,11 @@ export default function Portfolio() {
             <div>
               <p className="contact-lede">I'm open to freelance projects and full-time roles. Whether you have a project in mind, want to collaborate, or just want to say hi — my inbox is always open.</p>
               {[
-                { icon:"✉",  text: YOUR_EMAIL,    href:`mailto:${YOUR_EMAIL}` },
-                { icon:"📞", text: YOUR_PHONE,    href:`tel:${YOUR_PHONE}` },
-                { icon:"🌐", text: YOUR_WEBSITE,  href:`https://${YOUR_WEBSITE}` },
-                { icon:"⊙",  text: YOUR_GITHUB,   href:`https://${YOUR_GITHUB}` },
-                { icon:"in", text: YOUR_LINKEDIN, href:`https://${YOUR_LINKEDIN}` },
+                { icon:"✉",  text:YOUR_EMAIL,    href:`mailto:${YOUR_EMAIL}` },
+                { icon:"📞", text:YOUR_PHONE,    href:`tel:${YOUR_PHONE}` },
+                { icon:"🌐", text:YOUR_WEBSITE,  href:`https://${YOUR_WEBSITE}` },
+                { icon:"⊙",  text:YOUR_GITHUB,   href:`https://${YOUR_GITHUB}` },
+                { icon:"in", text:YOUR_LINKEDIN, href:`https://${YOUR_LINKEDIN}` },
               ].map(l => (
                 <a key={l.text} href={l.href} target="_blank" rel="noopener noreferrer" className="c-link">
                   <span className="c-link-icon">{l.icon}</span><span>{l.text}</span>
@@ -737,15 +867,13 @@ export default function Portfolio() {
               <button className="send-btn" onClick={handleSubmit} disabled={submitted || sending}>
                 {submitted ? "Message Sent!" : sending ? "Sending..." : <><SendIcon/> Send Message</>}
               </button>
-              {sendError && (
-                <p style={{ color: "red", fontSize: "13px", marginTop: "6px" }}>{sendError}</p>
-              )}
+              {sendError && <p style={{ color:"red", fontSize:"13px", marginTop:"6px" }}>{sendError}</p>}
             </div>
           </div>
         </section>
       </div>
 
-      {/* ── FOOTER ── */}
+      {/* FOOTER */}
       <div className="footer-wrap">
         <footer>
           <p className="footer-text">© {new Date().getFullYear()} {YOUR_NAME}</p>
@@ -756,6 +884,8 @@ export default function Portfolio() {
           </div>
         </footer>
       </div>
+
+      <ProjectModal project={activeProject} onClose={() => setActiveProject(null)} />
     </div>
   );
 }
