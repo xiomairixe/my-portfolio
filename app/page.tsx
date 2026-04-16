@@ -713,9 +713,9 @@ export default function Portfolio() {
           <h2 className="s-title">A bit about me</h2>
           <div className="about-grid">
             <div className="about-text">
-              <p>I'm a <strong>BS Information Technology graduate</strong> with hands-on experience building end-to-end web applications — from database schemas and REST APIs to polished, responsive UIs.</p>
+              <p>I'm a <strong>BS Information Technology graduate</strong> with hands-on experience building a web applications — from database schemas and REST APIs to polished, responsive UIs.</p>
               <p>I've delivered <strong>real-world systems</strong> used by actual people: attendance platforms, administrative tools, and financial trackers. I care about shipping things that work.</p>
-              <p>I'm actively pursuing a <strong>career in full-stack development and cybersecurity</strong> — with a growing focus on securing web applications, cloud infrastructure, and network systems.</p>
+              <p>I'm actively pursuing a <strong>career in full-stack web development and cybersecurity</strong> — with a growing focus on securing web applications, cloud infrastructure, and network systems.</p>
             </div>
             <div>
               {[
