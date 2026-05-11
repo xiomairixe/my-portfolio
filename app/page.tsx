@@ -39,6 +39,7 @@ const PROJECTS = [
       "/ViaHale/End_Users_Request_Form.png",
     ],
     github: "https://github.com/xiomairixe",
+    live: "",
     accent: "#f59e0b",
   },
   {
@@ -55,6 +56,7 @@ const PROJECTS = [
       "/MyStoreManagement/Sales.png",
     ],
     github: "https://github.com/xiomairixe",
+    live: "",
     accent: "#34d399",
   },
   {
@@ -72,6 +74,7 @@ const PROJECTS = [
       "/ClockedIn/Fingerprint_Enrollment.png",
     ],
     github: "https://github.com/xiomairixe",
+    live: "",
     accent: "#60a5fa",
   },
   {
@@ -87,6 +90,7 @@ const PROJECTS = [
       "/FinTrack/Transaction.png",
     ],
     github: "https://github.com/xiomairixe",
+    live: "",
     accent: "#a78bfa",
   },
   {
@@ -105,7 +109,18 @@ const PROJECTS = [
       "/Tala/Analytics.png",
     ],
     github: "https://github.com/xiomairixe",
+    live: "",
     accent: "#f472b6",
+  },
+  {
+    id: 6,
+    title: "DevHub",
+    description: "A platform connecting developers and clients — browse developer profiles, explore projects, and reach out directly to hire talent for your next idea.",
+    tags: ["React", "Express.js", "MongoDB"],
+    images: [],  // add screenshot paths here e.g. "/DevHub/Home.png"
+    github: "https://github.com/xiomairixe",
+    live: "https://devhub-liard.vercel.app/",
+    accent: "#22d3ee",
   },
 ];
 
@@ -186,7 +201,7 @@ function ProjectCarousel({ images, accent, title }: { images: string[]; accent: 
   const [loaded,  setLoaded]  = useState<Record<number,boolean>>({});
   const [errored, setErrored] = useState<Record<number,boolean>>({});
 
-  const validImages = images.filter(Boolean); // remove empty strings
+  const validImages = images.filter(Boolean);
 
   const prev = (e: React.MouseEvent) => { e.stopPropagation(); setIdx(i => (i - 1 + validImages.length) % validImages.length); };
   const next = (e: React.MouseEvent) => { e.stopPropagation(); setIdx(i => (i + 1) % validImages.length); };
@@ -267,7 +282,7 @@ function PlaceholderIllustration({ accent = "#f59e0b" }: { accent?: string }) {
 // ============================================================
 // PROJECT MODAL
 // ============================================================
-type Project = typeof PROJECTS[0];
+type Project = typeof PROJECTS[0] & { live?: string };
 
 function ProjectModal({ project, onClose }: { project: Project | null; onClose: () => void }) {
   const [idx,     setIdx]     = useState(0);
@@ -306,6 +321,7 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
         .modal-close-btn:hover { background:rgba(255,255,255,0.15) !important; }
         .modal-arrow-btn:hover { background:rgba(255,255,255,0.2) !important; }
         .modal-gh-btn:hover    { border-color:rgba(217,119,6,0.5) !important; background:var(--amberGlow) !important; }
+        .modal-live-btn:hover  { opacity:0.8 !important; transform:translateY(-1px) !important; }
       `}</style>
 
       <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg2)", border:"1px solid var(--border2)", borderRadius:20, width:"100%", maxWidth:920, maxHeight:"90vh", overflow:"hidden", display:"flex", flexDirection:"column", animation:"modalSlideUp 0.28s cubic-bezier(0.16,1,0.3,1)", boxShadow:"0 32px 80px rgba(0,0,0,0.6)" }}>
@@ -364,10 +380,18 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
               <p style={{ fontSize:11, fontWeight:700, letterSpacing:"0.13em", textTransform:"uppercase", color:project.accent, marginBottom:6 }}>Project</p>
               <h2 style={{ fontFamily:"'DM Serif Display',serif", fontSize:"clamp(22px,3vw,30px)", color:"var(--text)", letterSpacing:"-0.5px", lineHeight:1.1, margin:0 }}>{project.title}</h2>
             </div>
-            <a href={project.github} target="_blank" rel="noopener noreferrer" className="modal-gh-btn"
-              style={{ display:"inline-flex", alignItems:"center", gap:8, fontSize:13, fontWeight:600, padding:"10px 18px", borderRadius:9, border:"1px solid var(--border2)", color:"var(--text)", background:"var(--bg3)", textDecoration:"none", flexShrink:0, transition:"border-color 0.18s, background 0.18s" }}>
-              <GithubIcon size={14}/> View on GitHub
-            </a>
+            <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+              <a href={project.github} target="_blank" rel="noopener noreferrer" className="modal-gh-btn"
+                style={{ display:"inline-flex", alignItems:"center", gap:8, fontSize:13, fontWeight:600, padding:"10px 18px", borderRadius:9, border:"1px solid var(--border2)", color:"var(--text)", background:"var(--bg3)", textDecoration:"none", flexShrink:0, transition:"border-color 0.18s, background 0.18s" }}>
+                <GithubIcon size={14}/> View on GitHub
+              </a>
+              {project.live && (
+                <a href={project.live} target="_blank" rel="noopener noreferrer" className="modal-live-btn"
+                  style={{ display:"inline-flex", alignItems:"center", gap:8, fontSize:13, fontWeight:600, padding:"10px 18px", borderRadius:9, border:`1px solid ${project.accent}55`, color:project.accent, background:`${project.accent}12`, textDecoration:"none", flexShrink:0, transition:"opacity 0.18s, transform 0.18s" }}>
+                  <ExternalLinkIcon size={13}/> Live Demo
+                </a>
+              )}
+            </div>
           </div>
           <p style={{ fontSize:15, lineHeight:1.85, color:"var(--muted)", fontWeight:300, marginBottom:24, maxWidth:640 }}>{project.description}</p>
           <div style={{ borderTop:"1px solid var(--border)", marginBottom:20 }} />
@@ -414,6 +438,9 @@ function MoonIcon() {
 }
 function ExpandIcon() {
   return <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>;
+}
+function ExternalLinkIcon({ size=14 }: { size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>;
 }
 
 // ============================================================
@@ -591,6 +618,8 @@ export default function Portfolio() {
         .project-btns { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
         .proj-link { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:500; padding:8px 16px; border-radius:7px; border:1px solid var(--border); color:var(--muted); width:fit-content; transition:all 0.18s; }
         .proj-link:hover { color:var(--text); border-color:rgba(217,119,6,0.4); background:var(--amberGlow); }
+        .proj-live { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; padding:8px 16px; border-radius:7px; width:fit-content; transition:all 0.18s; text-decoration:none; }
+        .proj-live:hover { opacity:0.82; transform:translateY(-1px); }
         .proj-expand { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:8px 14px; border-radius:7px; border:1px solid var(--border); color:var(--muted); cursor:pointer; background:transparent; font-family:inherit; transition:all 0.18s; }
         .proj-expand:hover { color:var(--text); border-color:rgba(217,119,6,0.4); background:var(--amberGlow); }
         .project-visual { aspect-ratio:16/11; overflow:hidden; background:#0a0c14; border-left:1px solid var(--border); position:relative; transition:border-color 0.35s; }
@@ -803,6 +832,12 @@ export default function Portfolio() {
                   <a href={p.github} target="_blank" rel="noopener noreferrer" className="proj-link">
                     <GithubIcon size={14}/> View Code
                   </a>
+                  {p.live && (
+                    <a href={p.live} target="_blank" rel="noopener noreferrer" className="proj-live"
+                      style={{ border:`1px solid ${p.accent}55`, color:p.accent, background:`${p.accent}12` }}>
+                      <ExternalLinkIcon size={13}/> Live Demo
+                    </a>
+                  )}
                   {p.images.filter(Boolean).length > 0 && (
                     <button className="proj-expand" onClick={() => setActiveProject(p)}>
                       <ExpandIcon /> Preview
