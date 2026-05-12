@@ -117,7 +117,13 @@ const PROJECTS = [
     title: "DevHub",
     description: "A platform connecting developers and clients — browse developer profiles, explore projects, and reach out directly to hire talent for your next idea.",
     tags: ["React", "Express.js", "MongoDB"],
-    images: [],  // add screenshot paths here e.g. "/DevHub/Home.png"
+    images: [
+      "/DevHub/LandingPage.png",
+      "/DevHub/Login.png",
+      "/DevHub/Register.png",
+      "/DevHub/image.png",
+      "/DevHub/project.png"
+    ],  // add screenshot paths here e.g. "/DevHub/Home.png"
     github: "https://github.com/xiomairixe",
     live: "https://devhub-liard.vercel.app/",
     accent: "#22d3ee",
@@ -388,7 +394,7 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
               {project.live && (
                 <a href={project.live} target="_blank" rel="noopener noreferrer" className="modal-live-btn"
                   style={{ display:"inline-flex", alignItems:"center", gap:8, fontSize:13, fontWeight:600, padding:"10px 18px", borderRadius:9, border:`1px solid ${project.accent}55`, color:project.accent, background:`${project.accent}12`, textDecoration:"none", flexShrink:0, transition:"opacity 0.18s, transform 0.18s" }}>
-                  <ExternalLinkIcon size={13}/> Live Demo
+                  <ExternalLinkIcon size={13}/> Visit
                 </a>
               )}
             </div>
@@ -835,7 +841,7 @@ export default function Portfolio() {
                   {p.live && (
                     <a href={p.live} target="_blank" rel="noopener noreferrer" className="proj-live"
                       style={{ border:`1px solid ${p.accent}55`, color:p.accent, background:`${p.accent}12` }}>
-                      <ExternalLinkIcon size={13}/> Live Demo
+                      <ExternalLinkIcon size={13}/> Visit
                     </a>
                   )}
                   {p.images.filter(Boolean).length > 0 && (
