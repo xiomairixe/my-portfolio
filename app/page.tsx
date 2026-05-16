@@ -61,6 +61,9 @@ const PROJECTS = [
     challenge: "Small stores often rely on pen-and-paper inventory. This replaced that with a fast, reliable digital system.",
     tags: ["React", "Express.js", "MongoDB", "Tailwind CSS"],
     images: [
+      "/MyStoreManagement/desktop/dashboard.png",
+      "/MyStoreManagement/desktop/products.png",
+      "/MyStoreManagement/desktop/sales.png",
       "/MyStoreManagement/Dashboard.png",
       "/MyStoreManagement/Inventoryactions.png",
       "/MyStoreManagement/NewProductForm.png",
@@ -80,9 +83,6 @@ const PROJECTS = [
     challenge: "The hardest part was bridging hardware (Raspberry Pi GPIO) with a web application backend in real-time.",
     tags: ["Laravel", "Vue.js", "Quasar", "MySQL", "Raspberry Pi", "Docker"],
     images: [
-      "/ClockedIn/desktop/dashboard.png",
-      "/ClockedIn/desktop/products.png",
-      "/ClockedIn/desktop/sales.png",
       "/ClockedIn/Main_Interface.png",
       "/ClockedIn/ESS_Home_Page.png",
       "/ClockedIn/ESS_Profile.png",
