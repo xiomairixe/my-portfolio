@@ -80,6 +80,9 @@ const PROJECTS = [
     challenge: "The hardest part was bridging hardware (Raspberry Pi GPIO) with a web application backend in real-time.",
     tags: ["Laravel", "Vue.js", "Quasar", "MySQL", "Raspberry Pi", "Docker"],
     images: [
+      "/ClockedIn/desktop/dashboard.png",
+      "/ClockedIn/desktop/products.png",
+      "/ClockedIn/desktop/sales.png",
       "/ClockedIn/Main_Interface.png",
       "/ClockedIn/ESS_Home_Page.png",
       "/ClockedIn/ESS_Profile.png",
