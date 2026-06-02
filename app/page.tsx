@@ -17,13 +17,11 @@ const YOUR_LINKEDIN = "linkedin.com/in/glen-honrado-8694b4322";
 const TYPING_ROLES  = ["Full-Stack", "Frontend", "Backend", "PenTester"];
 
 const STATS = [
-  { value: "6+", label: "Projects Shipped", icon: "🚀" },
+  { value: "5+", label: "Projects Shipped", icon: "🚀" },
   { value: "7+", label: "Tech Stacks", icon: "⚙️" },
   { value: "1",  label: "Internship Completed", icon: "💼" },
   { value: "4",  label: "Years of Building", icon: "📅" },
 ];
-
-
 
 const SKILL_CATEGORIES = [
   { title: "Frontend",       skills: ["React", "Next.js", "Vue.js", "Quasar", "TypeScript", "TailwindCSS", "Bootstrap"] },
@@ -133,24 +131,6 @@ const PROJECTS = [
     github: "https://github.com/xiomairixe",
     live: "",
     accent: "#f472b6",
-  },
-  {
-    id: 6,
-    title: "DevHub — Connect Freelancer to their Clients",
-    subtitle: "Be the Admin, connect to your clients and manage your projects.",
-    description: "A platform connecting developers with clients. Developers showcase profiles and projects; clients browse, filter by skills, and reach out directly. Built with a full authentication system, project galleries, and a messaging layer.",
-    challenge: "Standing up a two-sided marketplace with auth, profiles, and project display from scratch — and making it actually feel like a product.",
-    tags: ["React", "Express.js", "MongoDB"],
-    images: [
-      "/DevHub/LandingPage.png",
-      "/DevHub/Login.png",
-      "/DevHub/Register.png",
-      "/DevHub/image.png",
-      "/DevHub/project.png",
-    ],
-    github: "https://github.com/xiomairixe",
-    live: "https://devhub-liard.vercel.app/",
-    accent: "#22d3ee",
   },
 ];
 
@@ -640,28 +620,6 @@ export default function Portfolio() {
         .value-title { font-size:13.5px; font-weight:700; color:var(--text); margin-bottom:5px; }
         .value-desc { font-size:12.5px; color:var(--muted); line-height:1.6; font-weight:300; }
 
-        /* ── DEVHUB PROMO ── */
-        .devhub-banner { position:relative; background:var(--bg2); border:1px solid var(--border); border-radius:20px; overflow:hidden; transition:border-color 0.22s, background 0.35s; }
-        .devhub-banner:hover { border-color:rgba(34,211,238,0.35); }
-        .devhub-top-bar { height:3px; background:linear-gradient(90deg,#22d3ee,#06b6d4,transparent); }
-        .devhub-inner { display:grid; grid-template-columns:1fr 1fr; gap:0; }
-        @media (max-width:820px) { .devhub-inner { grid-template-columns:1fr; } .devhub-visual { border-left:none !important; border-top:1px solid var(--border) !important; height:260px !important; aspect-ratio:unset !important; } }
-        .devhub-content { padding:44px 48px; display:flex; flex-direction:column; justify-content:center; }
-        @media (max-width:480px) { .devhub-content { padding:28px 24px; } }
-        .devhub-badge { display:inline-flex; align-items:center; gap:7px; font-size:11px; font-weight:700; letter-spacing:0.13em; text-transform:uppercase; color:#22d3ee; background:rgba(34,211,238,0.1); border:1px solid rgba(34,211,238,0.22); padding:6px 13px; border-radius:99px; margin-bottom:18px; width:fit-content; }
-        .devhub-badge-dot { width:6px; height:6px; border-radius:50%; background:#22d3ee; box-shadow:0 0 8px #22d3ee; animation:pulse 2.4s ease-in-out infinite; }
-        .devhub-title { font-family:'DM Serif Display',serif; font-size:clamp(24px,3vw,34px); color:var(--text); letter-spacing:-0.8px; margin-bottom:8px; line-height:1.1; }
-        .devhub-subtitle { font-size:13.5px; color:#22d3ee; font-weight:600; margin-bottom:18px; }
-        .devhub-desc { font-size:15px; line-height:1.85; color:var(--muted); font-weight:300; margin-bottom:24px; max-width:440px; }
-        .devhub-steps { display:flex; flex-direction:column; gap:12px; margin-bottom:28px; }
-        .devhub-step { display:flex; align-items:flex-start; gap:13px; }
-        .devhub-step-num { width:26px; height:26px; border-radius:50%; background:rgba(34,211,238,0.12); border:1px solid rgba(34,211,238,0.3); color:#22d3ee; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
-        .devhub-step-text { font-size:14px; color:var(--muted); line-height:1.65; font-weight:300; }
-        .devhub-step-text strong { color:var(--text); font-weight:600; }
-        .devhub-cta { display:inline-flex; align-items:center; gap:9px; background:#22d3ee; color:#0a0c14; font-size:14px; font-weight:700; padding:13px 26px; border-radius:9px; text-decoration:none; transition:background 0.18s, transform 0.18s; box-shadow:0 4px 24px rgba(34,211,238,0.25); width:fit-content; }
-        .devhub-cta:hover { background:#06b6d4; transform:translateY(-1px); }
-        .devhub-visual { aspect-ratio:1/1; overflow:hidden; background:#0a0c14; border-left:1px solid var(--border); position:relative; display:flex; align-items:center; justify-content:center; }
-
         /* ── SKILLS ── */
         .skills-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
         @media (max-width:760px) { .skills-grid { grid-template-columns:1fr 1fr; } }
@@ -788,7 +746,6 @@ export default function Portfolio() {
             {["About","Skills","Experience","Projects","Contact"].map(l => (
               <a key={l} href={`#${l.toLowerCase()}`} className="nav-link">{l}</a>
             ))}
-            <a href="https://devhub-liard.vercel.app/" target="_blank" rel="noopener noreferrer" className="nav-link" style={{ color:"#22d3ee", fontWeight:600 }}>DevHub ↗</a>
             <button className="theme-toggle" onClick={toggleTheme} aria-label={dark?"Switch to light":"Switch to dark"}>
               {dark ? <SunIcon /> : <MoonIcon />}
             </button>
@@ -904,95 +861,6 @@ export default function Portfolio() {
 
       <hr/>
 
-      {/* ── DEVHUB PROMO ── */}
-      <div className="page-wrap">
-        <section id="devhub" className="section" style={{ paddingBottom:0 }}>
-          <p className="s-label">Hire Me for Freelance</p>
-          <h2 className="s-title">Looking for a developer?</h2>
-          <p className="s-sub">I built a platform specifically for this — browse my profile, see my work, and reach out directly. It takes less than a minute.</p>
-          <div className="devhub-banner">
-            <div className="devhub-top-bar"/>
-            <div className="devhub-inner">
-              <div className="devhub-content">
-                <div className="devhub-badge"><span className="devhub-badge-dot"/>Live Platform</div>
-                <h3 className="devhub-title">DevHub</h3>
-                <p className="devhub-subtitle">Connect Freelancer to their Clients — Be the Admin, connect to your clients and manage your projects.</p>
-                <p className="devhub-desc">DevHub is a platform I built to connect developers with clients who need real work done. Instead of back-and-forth emails, you can see exactly who I am, what I've built, and what I offer — then reach out with one click.</p>
-                <div className="devhub-steps">
-                  <div className="devhub-step">
-                    <span className="devhub-step-num">1</span>
-                    <p className="devhub-step-text"><strong>Browse my profile</strong> — view my full bio, skills, and the projects I've shipped.</p>
-                  </div>
-                  <div className="devhub-step">
-                    <span className="devhub-step-num">2</span>
-                    <p className="devhub-step-text"><strong>Explore my work</strong> — each project is listed with tech stack, description, and screenshots.</p>
-                  </div>
-                  <div className="devhub-step">
-                    <span className="devhub-step-num">3</span>
-                    <p className="devhub-step-text"><strong>Send me a message</strong> — tell me what you need and I'll get back to you within 24 hours.</p>
-                  </div>
-                </div>
-                <a href="https://devhub-liard.vercel.app/" target="_blank" rel="noopener noreferrer" className="devhub-cta">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                  Open DevHub — Find Me
-                </a>
-              </div>
-              <div className="devhub-visual">
-                {/* Stylized DevHub mockup */}
-                <svg viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width:"90%", maxWidth:340 }}>
-                  <rect width="420" height="420" fill="#070c14"/>
-                  {/* card */}
-                  <rect x="20" y="20" width="380" height="380" rx="14" fill="#0d1625" stroke="rgba(34,211,238,0.18)" strokeWidth="1"/>
-                  {/* top bar */}
-                  <rect x="20" y="20" width="380" height="3" rx="2" fill="url(#dh-grad)"/>
-                  <defs>
-                    <linearGradient id="dh-grad" x1="0" y1="0" x2="380" y2="0" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#22d3ee"/>
-                      <stop offset="0.6" stopColor="#06b6d4"/>
-                      <stop offset="1" stopColor="transparent"/>
-                    </linearGradient>
-                  </defs>
-                  {/* avatar circle */}
-                  <circle cx="210" cy="100" r="38" fill="rgba(34,211,238,0.12)" stroke="rgba(34,211,238,0.35)" strokeWidth="1.5"/>
-                  <circle cx="210" cy="90" r="14" fill="rgba(34,211,238,0.3)"/>
-                  <path d="M182 118 q28-18 56 0" stroke="rgba(34,211,238,0.4)" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-                  {/* name / role lines */}
-                  <rect x="150" y="150" width="120" height="10" rx="4" fill="rgba(241,245,249,0.75)"/>
-                  <rect x="170" y="168" width="80" height="7" rx="3" fill="rgba(34,211,238,0.55)"/>
-                  {/* divider */}
-                  <line x1="48" y1="192" x2="372" y2="192" stroke="rgba(255,255,255,0.07)" strokeWidth="1"/>
-                  {/* skill tags */}
-                  <rect x="48" y="206" width="56" height="20" rx="5" fill="rgba(34,211,238,0.12)" stroke="rgba(34,211,238,0.25)" strokeWidth="0.8"/>
-                  <rect x="112" y="206" width="48" height="20" rx="5" fill="rgba(34,211,238,0.12)" stroke="rgba(34,211,238,0.25)" strokeWidth="0.8"/>
-                  <rect x="168" y="206" width="60" height="20" rx="5" fill="rgba(34,211,238,0.12)" stroke="rgba(34,211,238,0.25)" strokeWidth="0.8"/>
-                  <rect x="236" y="206" width="52" height="20" rx="5" fill="rgba(34,211,238,0.08)" stroke="rgba(34,211,238,0.15)" strokeWidth="0.8"/>
-                  <rect x="296" y="206" width="76" height="20" rx="5" fill="rgba(34,211,238,0.08)" stroke="rgba(34,211,238,0.15)" strokeWidth="0.8"/>
-                  <rect x="48" y="234" width="60" height="20" rx="5" fill="rgba(34,211,238,0.08)" stroke="rgba(34,211,238,0.15)" strokeWidth="0.8"/>
-                  <rect x="116" y="234" width="44" height="20" rx="5" fill="rgba(34,211,238,0.08)" stroke="rgba(34,211,238,0.15)" strokeWidth="0.8"/>
-                  {/* divider */}
-                  <line x1="48" y1="270" x2="372" y2="270" stroke="rgba(255,255,255,0.07)" strokeWidth="1"/>
-                  {/* project cards */}
-                  <rect x="48" y="284" width="156" height="96" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(34,211,238,0.2)" strokeWidth="0.8"/>
-                  <rect x="216" y="284" width="156" height="96" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" strokeWidth="0.8"/>
-                  <rect x="58" y="294" width="80" height="6" rx="2" fill="rgba(34,211,238,0.5)"/>
-                  <rect x="58" y="308" width="136" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
-                  <rect x="58" y="320" width="110" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
-                  <rect x="58" y="355" width="50" height="16" rx="4" fill="rgba(34,211,238,0.18)" stroke="rgba(34,211,238,0.3)" strokeWidth="0.8"/>
-                  <rect x="226" y="294" width="80" height="6" rx="2" fill="rgba(255,255,255,0.35)"/>
-                  <rect x="226" y="308" width="136" height="4" rx="2" fill="rgba(255,255,255,0.14)"/>
-                  <rect x="226" y="320" width="110" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
-                  <rect x="226" y="355" width="50" height="16" rx="4" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8"/>
-                  {/* DevHub label */}
-                  <text x="210" y="408" textAnchor="middle" fill="rgba(34,211,238,0.35)" fontSize="11" fontFamily="'DM Sans',sans-serif" fontWeight="600" letterSpacing="0.1em">DEVHUB</text>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <hr/>
-
       {/* ── SKILLS ── */}
       <div className="page-wrap">
         <section id="skills" className="section">
@@ -1068,7 +936,7 @@ export default function Portfolio() {
                 <span className="edu-year">2022 – 2026</span>
               </div>
               <p className="edu-note">
-                Four-year program covering software engineering, database systems, networking, and web development. Beyond the curriculum, I independently built <strong>six full-stack projects</strong> using technologies not taught in class — driven by a belief that real learning happens when you're solving actual problems, not following textbook exercises.
+                Four-year program covering software engineering, database systems, networking, and web development. Beyond the curriculum, I independently built <strong>five full-stack projects</strong> using technologies not taught in class — driven by a belief that real learning happens when you're solving actual problems, not following textbook exercises.
               </p>
               <div className="edu-highlights">
                 {["Full-Stack Development","Database Design","REST API Architecture","Software Engineering","Networking Fundamentals","UI/UX Principles","Capstone: RFID Attendance System"].map(h => (
@@ -1087,7 +955,7 @@ export default function Portfolio() {
         <section id="projects" className="section">
           <p className="s-label">Projects</p>
           <h2 className="s-title">Things I've built</h2>
-          <p className="s-sub">Six real-world systems, each one solving a genuine problem — and teaching me something I couldn't have learned in a classroom.</p>
+          <p className="s-sub">Five real-world systems, each one solving a genuine problem — and teaching me something I couldn't have learned in a classroom.</p>
           {PROJECTS.map((p, i) => (
             <div key={p.id} className="project-row">
               <div className="project-info">
